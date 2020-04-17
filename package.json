@@ -9,9 +9,7 @@
   "module": "dist/v-scroll-threshold.esm.js",
   "unpkg": "dist/v-scroll-threshold.min.js",
   "files": [
-    "dist/*",
-    "src/**/*.vue",
-    "!src/serve-dev.*"
+    "dist/*"
   ],
   "keywords": [
     "vue",
