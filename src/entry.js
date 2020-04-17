@@ -3,7 +3,7 @@ import directive from '@/v-scroll-threshold';
 const install = function installVScrollThreshold(Vue) {
   if (install.installed) return;
   install.installed = true;
-  Vue.directive('VScrollThreshold', directive);
+  Vue.directive('ScrollThreshold', directive);
 };
 
 const plugin = {
