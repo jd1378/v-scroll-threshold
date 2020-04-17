@@ -50,7 +50,7 @@ then use it:
 
 ### notes
 
-v-scroll-threshold directive accepts an object with following properties:
+v-scroll-threshold directive has 2 modifiers (up, down) and accepts an object with following properties:
 
 #### `threshold` - number in px unit
 
@@ -64,4 +64,4 @@ the function that is called everytime the page is scrolled with two arguments. f
 - `0` means the scroll has passed the element and is inside the threshold (inclusive)
 - `1` means the scroll has passed the element and the threshold
 
-second args is if the last scroll event was in the same direction as the last scroll
+second arg is if the last scroll event was in direction of the specified modifier.
