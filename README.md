@@ -56,10 +56,12 @@ v-scroll-threshold directive accepts an object with following properties:
 
 
 
-#### `callback(relativePos, scrolledAtSameDirection)`
+#### `callback(relativePos, sameDirection)`
 
 the function that is called everytime the page is scrolled with two arguments. first arg is always one of the following values: `-1`, `0`, `1`
 
 - `-1` means the scroll position is before the element (element not reached the top of screen)
-- `0` means the scroll has passed the element and is inside the threshold
+- `0` means the scroll has passed the element and is inside the threshold (inclusive)
 - `1` means the scroll has passed the element and the threshold
+
+second args is if the last scroll event was in the same direction as the last scroll
