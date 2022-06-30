@@ -1,6 +1,6 @@
 {
   "name": "v-scroll-threshold",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "jd1378",
   "license": "MIT",
   "description": "A vue directive that accepts a threshold value and a callback function that tells you if current scroll position is before the binded element, after element and inside the threshold or past the threshold",
@@ -54,7 +54,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "peerDependencies": {
-    "vue": "^2.6.10"
+    "vue": "^2.6.10 || >=3.0.0"
   },
   "engines": {
     "node": ">=8"

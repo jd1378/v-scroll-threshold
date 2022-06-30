@@ -40,38 +40,44 @@ function isAlongDirection(modifiers, offset) {
   return false;
 }
 
-export default {
-  bind(el, binding) {
-    if (!isBindingValueValid(binding.value)) {
-      return;
+const bind = (el, binding) => {
+  if (!isBindingValueValid(binding.value)) {
+    return;
+  }
+  const callback = binding.value.callback;
+  let startingRelativeScrollPos = scrollPosition(el, binding.value.threshold);
+  let lastScrollPos = window.pageYOffset || window.scrollTop || 0;
+  let lastWasAlong = false;
+  const f = function scrollHandler() {
+    const newRelativeScrollPos = scrollPosition(el, binding.value.threshold);
+    const newScrollPos = window.pageYOffset || window.scrollTop || 0;
+    const offset = lastScrollPos - newScrollPos;
+    lastScrollPos = newScrollPos;
+    const newDirectionStatus = isAlongDirection(binding.modifiers, offset);
+    if (
+      newRelativeScrollPos !== startingRelativeScrollPos ||
+      lastWasAlong !== newDirectionStatus
+    ) {
+      startingRelativeScrollPos = newRelativeScrollPos;
+      lastWasAlong = newDirectionStatus;
+      callback(newRelativeScrollPos, newDirectionStatus);
     }
-    const callback = binding.value.callback;
-    let startingRelativeScrollPos = scrollPosition(el, binding.value.threshold);
-    let lastScrollPos = window.pageYOffset || window.scrollTop || 0;
-    let lastWasAlong = false;
-    const f = function scrollHandler() {
-      const newRelativeScrollPos = scrollPosition(el, binding.value.threshold);
-      const newScrollPos = window.pageYOffset || window.scrollTop || 0;
-      const offset = lastScrollPos - newScrollPos;
-      lastScrollPos = newScrollPos;
-      const newDirectionStatus = isAlongDirection(binding.modifiers, offset);
-      if (
-        newRelativeScrollPos !== startingRelativeScrollPos ||
-        lastWasAlong !== newDirectionStatus
-      ) {
-        startingRelativeScrollPos = newRelativeScrollPos;
-        lastWasAlong = newDirectionStatus;
-        callback(newRelativeScrollPos, newDirectionStatus);
-      }
-    };
-    window.addEventListener('scroll', f, { passive: true });
-    callback(startingRelativeScrollPos, false);
-    el._onScrollThreshold = callback;
-  },
-  unbind(el) {
-    if (!el._onScrollThreshold) return;
-    const callback = el._onScrollThreshold;
-    window.removeEventListener('scroll', callback);
-    delete el._onScrollThreshold;
-  },
+  };
+  window.addEventListener('scroll', f, { passive: true });
+  callback(startingRelativeScrollPos, false);
+  el._onScrollThreshold = callback;
+};
+
+const unbind = (el) => {
+  if (!el._onScrollThreshold) return;
+  const callback = el._onScrollThreshold;
+  window.removeEventListener('scroll', callback);
+  delete el._onScrollThreshold;
+};
+
+export default {
+  bind,
+  beforeMount: bind, // vue 3
+  unbind,
+  unmounted: unbind, // vue 3
 };
