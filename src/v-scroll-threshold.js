@@ -1,6 +1,6 @@
 function isBindingValueValid(bindingValue) {
   if (bindingValue) {
-    if (bindingValue.threshold) {
+    if (bindingValue.threshold !== undefined) {
       if (
         bindingValue.callback &&
         typeof bindingValue.callback === 'function'
