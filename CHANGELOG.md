@@ -1,3 +1,7 @@
+### 2.1.2
+
+Fix not being able to update threshold value
+
 ### 2.1.1
 
 add vue 3 support
