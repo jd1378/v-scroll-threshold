@@ -18,11 +18,14 @@ function getRelativeScrollPositionToElement(el) {
   return currentScroll - elementScroll;
 }
 
-function scrollPosition(el, threshold) {
+function scrollPosition(el) {
   const scrollRelativePos = getRelativeScrollPositionToElement(el);
   if (scrollRelativePos < 0) {
     return -1;
-  } else if (scrollRelativePos >= 0 && scrollRelativePos <= threshold) {
+  } else if (
+    scrollRelativePos >= 0 &&
+    scrollRelativePos <= el._scrollThreshold
+  ) {
     return 0;
   } else {
     return 1;
@@ -45,11 +48,12 @@ const bind = (el, binding) => {
     return;
   }
   const callback = binding.value.callback;
-  let startingRelativeScrollPos = scrollPosition(el, binding.value.threshold);
+  el._scrollThreshold = binding.value.threshold || 0;
+  let startingRelativeScrollPos = scrollPosition(el);
   let lastScrollPos = window.pageYOffset || window.scrollTop || 0;
   let lastWasAlong = false;
   const f = function scrollHandler() {
-    const newRelativeScrollPos = scrollPosition(el, binding.value.threshold);
+    const newRelativeScrollPos = scrollPosition(el);
     const newScrollPos = window.pageYOffset || window.scrollTop || 0;
     const offset = lastScrollPos - newScrollPos;
     lastScrollPos = newScrollPos;
@@ -75,9 +79,15 @@ const unbind = (el) => {
   delete el._onScrollThreshold;
 };
 
+const update = (el, binding) => {
+  el._scrollThreshold = binding.value.threshold || 0;
+};
+
 export default {
   bind,
   beforeMount: bind, // vue 3
   unbind,
   unmounted: unbind, // vue 3
+  update,
+  updated: update, // vue 3
 };
