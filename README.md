@@ -63,5 +63,6 @@ the function that is called everytime the page is scrolled with two arguments. f
 - `-1` means the scroll position is before the element (element not reached the top of screen)
 - `0` means the scroll has passed the element and is inside the threshold (inclusive)
 - `1` means the scroll has passed the element and the threshold
+- `-0` means the scroll position is inside the threshold but also at the top of screen. added this because it was hard to know this.
 
 second arg is if the last scroll event was in direction of the specified modifier.

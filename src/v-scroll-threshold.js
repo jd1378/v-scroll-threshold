@@ -15,13 +15,29 @@ function isBindingValueValid(bindingValue) {
 function getRelativeScrollPositionToElement(el) {
   const currentScroll = window.pageYOffset || window.scrollTop || 0;
   const elementScroll = el.offsetTop || 0;
+  if (currentScroll === 0 && elementScroll === 0) {
+    /**
+     * since we can't go past the element at the top,
+     * we have to have a way of telling that we have went reached the top but
+     * still inside the element and
+     * maybe the user need to trigger sth
+     */
+    return -0;
+  }
   return currentScroll - elementScroll;
+}
+
+export function isMinusZero(value) {
+  if (Object.is(value, -0)) return true;
 }
 
 function scrollPosition(el) {
   const scrollRelativePos = getRelativeScrollPositionToElement(el);
   if (scrollRelativePos < 0) {
     return -1;
+  } else if (scrollRelativePos === 0) {
+    // this is for letting -0 through
+    return scrollRelativePos;
   } else if (
     scrollRelativePos >= 0 &&
     scrollRelativePos <= el._scrollThreshold
