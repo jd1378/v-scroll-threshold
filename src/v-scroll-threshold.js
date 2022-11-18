@@ -75,6 +75,7 @@ const bind = (el, binding) => {
     lastScrollPos = newScrollPos;
     const newDirectionStatus = isAlongDirection(binding.modifiers, offset);
     if (
+      isMinusZero(newRelativeScrollPos) ||
       newRelativeScrollPos !== startingRelativeScrollPos ||
       lastWasAlong !== newDirectionStatus
     ) {
