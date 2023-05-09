@@ -1,3 +1,7 @@
+### 2.2.0
+
+Add new `scrollBackThreshold` option.
+
 ### 2.1.2
 
 Fix not being able to update threshold value

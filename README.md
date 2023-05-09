@@ -30,7 +30,7 @@ export default {
 }
 ```
 
-then use it: 
+then use it:
 
 ```html
 <template>
@@ -54,7 +54,9 @@ v-scroll-threshold directive has 2 modifiers (up, down) and accepts an object wi
 
 #### `threshold` - number in px unit
 
+#### `scrollBackThreshold` - number in px unit
 
+When set above zero, will only call callback when scroll is moved at least of this ammount along the direction set by modifier.
 
 #### `callback(relativePos, sameDirection)`
 
