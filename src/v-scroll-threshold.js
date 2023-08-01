@@ -13,7 +13,8 @@ function isBindingValueValid(bindingValue) {
 }
 
 function getRelativeScrollPositionToElement(el, elementOffset) {
-  const currentScroll = window.pageYOffset || window.scrollTop || 0;
+  const currentScroll =
+    window.scrollY || window.pageYOffset || window.scrollTop || 0;
   const elementScroll = (el.offsetTop || 0) + (elementOffset || 0);
   if (currentScroll === 0 && elementScroll === 0) {
     /**
@@ -75,11 +76,13 @@ const bind = (el, binding) => {
   el._scrollBackThreshold = binding.value.scrollBackThreshold || 0;
   el._scrollBackValue = 0;
   let startingRelativeScrollPos = scrollPosition(el, el._detectionOffset);
-  let lastScrollPos = window.pageYOffset || window.scrollTop || 0;
+  let lastScrollPos =
+    window.scrollY || window.pageYOffset || window.scrollTop || 0;
   let lastWasAlong = false;
   const scrollHandler = function scrollHandler() {
     const newRelativeScrollPos = scrollPosition(el, el._detectionOffset);
-    const newScrollPos = window.pageYOffset || window.scrollTop || 0;
+    const newScrollPos =
+      window.scrollY || window.pageYOffset || window.scrollTop || 0;
     const offset = lastScrollPos - newScrollPos;
     lastScrollPos = newScrollPos;
     const newIsAlong = isAlongDirection(binding.modifiers, offset);
