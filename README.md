@@ -54,6 +54,8 @@ v-scroll-threshold directive has 2 modifiers (up, down) and accepts an object wi
 
 #### `threshold` - number in px unit
 
+#### `offset` - number in px unit, will move the element detection by this offset up (negative) or down (positive)
+
 #### `scrollBackThreshold` - number in px unit
 
 When set above zero, will only call callback when scroll is moved at least of this ammount along the direction set by modifier.

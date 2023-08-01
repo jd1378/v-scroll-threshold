@@ -12,9 +12,9 @@ function isBindingValueValid(bindingValue) {
   return false;
 }
 
-function getRelativeScrollPositionToElement(el) {
+function getRelativeScrollPositionToElement(el, elementOffset) {
   const currentScroll = window.pageYOffset || window.scrollTop || 0;
-  const elementScroll = el.offsetTop || 0;
+  const elementScroll = (el.offsetTop || 0) + (elementOffset || 0);
   if (currentScroll === 0 && elementScroll === 0) {
     /**
      * since we can't go past the element at the top,
@@ -31,8 +31,11 @@ export function isMinusZero(value) {
   if (Object.is(value, -0)) return true;
 }
 
-function scrollPosition(el) {
-  const scrollRelativePos = getRelativeScrollPositionToElement(el);
+function scrollPosition(el, elementOffset) {
+  const scrollRelativePos = getRelativeScrollPositionToElement(
+    el,
+    elementOffset
+  );
   if (scrollRelativePos < 0) {
     return -1;
   } else if (scrollRelativePos === 0) {
@@ -59,19 +62,23 @@ function isAlongDirection(modifiers, offset) {
   return false;
 }
 
+const evtOpts = { passive: true };
+
 const bind = (el, binding) => {
   if (!isBindingValueValid(binding.value)) {
     return;
   }
-  const callback = binding.value.callback;
+
+  el._thresholdCallback = binding.value.callback || (() => {});
   el._scrollThreshold = binding.value.threshold || 0;
+  el._detectionOffset = binding.value.offset || 0;
   el._scrollBackThreshold = binding.value.scrollBackThreshold || 0;
   el._scrollBackValue = 0;
-  let startingRelativeScrollPos = scrollPosition(el);
+  let startingRelativeScrollPos = scrollPosition(el, el._detectionOffset);
   let lastScrollPos = window.pageYOffset || window.scrollTop || 0;
   let lastWasAlong = false;
-  const f = function scrollHandler() {
-    const newRelativeScrollPos = scrollPosition(el);
+  const scrollHandler = function scrollHandler() {
+    const newRelativeScrollPos = scrollPosition(el, el._detectionOffset);
     const newScrollPos = window.pageYOffset || window.scrollTop || 0;
     const offset = lastScrollPos - newScrollPos;
     lastScrollPos = newScrollPos;
@@ -100,23 +107,29 @@ const bind = (el, binding) => {
     ) {
       startingRelativeScrollPos = newRelativeScrollPos;
       lastWasAlong = newIsAlong;
-      callback(newRelativeScrollPos, newIsAlong);
+      el._thresholdCallback(newRelativeScrollPos, newIsAlong);
     }
   };
-  window.addEventListener('scroll', f, { passive: true });
-  callback(startingRelativeScrollPos, false);
-  el._onScrollThreshold = callback;
+  window.addEventListener('scroll', scrollHandler, evtOpts);
+  el._thresholdCallback(startingRelativeScrollPos, false);
+  el._scrollHandler = scrollHandler;
 };
 
 const unbind = (el) => {
-  if (!el._onScrollThreshold) return;
-  const callback = el._onScrollThreshold;
-  window.removeEventListener('scroll', callback);
-  delete el._onScrollThreshold;
+  if (!el._scrollHandler) return;
+  window.removeEventListener('scroll', el._scrollHandler, evtOpts);
+  delete el._scrollHandler;
+  delete el._thresholdCallback;
+  delete el._scrollThreshold;
+  delete el._scrollBackThreshold;
+  delete el._detectionOffset;
 };
 
 const update = (el, binding) => {
+  el._thresholdCallback = binding.value.callback || (() => {});
   el._scrollThreshold = binding.value.threshold || 0;
+  el._scrollBackThreshold = binding.value.scrollBackThreshold || 0;
+  el._detectionOffset = binding.value.offset || 0;
 };
 
 export default {
