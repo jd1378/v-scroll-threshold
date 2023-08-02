@@ -141,7 +141,10 @@ const unbind = (el) => {
 };
 
 const update = (el, binding) => {
-  if (el._scrollElement !== binding.value.scrollElement) {
+  if (
+    typeof binding.value.scrollElement !== 'undefined' &&
+    el._scrollElement !== binding.value.scrollElement
+  ) {
     unbind(el);
     bind(el, binding);
   } else {
