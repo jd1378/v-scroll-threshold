@@ -52,6 +52,8 @@ then use it:
 
 v-scroll-threshold directive has 2 modifiers (up, down) and accepts an object with following properties:
 
+#### `scrollElement` - the element to add "onscroll" event listener to
+
 #### `threshold` - number in px unit
 
 #### `offset` - number in px unit, will move the element detection by this offset up (negative) or down (positive)

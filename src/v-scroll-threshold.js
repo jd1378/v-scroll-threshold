@@ -75,14 +75,21 @@ const bind = (el, binding) => {
   el._detectionOffset = binding.value.offset || 0;
   el._scrollBackThreshold = binding.value.scrollBackThreshold || 0;
   el._scrollBackValue = 0;
+  el._scrollElement = binding.value.scrollElement || window;
   let startingRelativeScrollPos = scrollPosition(el, el._detectionOffset);
   let lastScrollPos =
-    window.scrollY || window.pageYOffset || window.scrollTop || 0;
+    el._scrollElement.scrollY ||
+    el._scrollElement.pageYOffset ||
+    el._scrollElement.scrollTop ||
+    0;
   let lastWasAlong = false;
   const scrollHandler = function scrollHandler() {
     const newRelativeScrollPos = scrollPosition(el, el._detectionOffset);
     const newScrollPos =
-      window.scrollY || window.pageYOffset || window.scrollTop || 0;
+      el._scrollElement.scrollY ||
+      el._scrollElement.pageYOffset ||
+      el._scrollElement.scrollTop ||
+      0;
     const offset = lastScrollPos - newScrollPos;
     lastScrollPos = newScrollPos;
     const newIsAlong = isAlongDirection(binding.modifiers, offset);
@@ -113,26 +120,35 @@ const bind = (el, binding) => {
       el._thresholdCallback(newRelativeScrollPos, newIsAlong);
     }
   };
-  window.addEventListener('scroll', scrollHandler, evtOpts);
+  el._scrollElement.addEventListener('scroll', scrollHandler, evtOpts);
   el._thresholdCallback(startingRelativeScrollPos, false);
   el._scrollHandler = scrollHandler;
 };
 
 const unbind = (el) => {
   if (!el._scrollHandler) return;
-  window.removeEventListener('scroll', el._scrollHandler, evtOpts);
+  el._scrollElement.removeEventListener('scroll', el._scrollHandler, evtOpts);
   delete el._scrollHandler;
   delete el._thresholdCallback;
   delete el._scrollThreshold;
   delete el._scrollBackThreshold;
   delete el._detectionOffset;
+  delete el._scrollElement;
 };
 
 const update = (el, binding) => {
-  el._thresholdCallback = binding.value.callback || (() => {});
-  el._scrollThreshold = binding.value.threshold || 0;
-  el._scrollBackThreshold = binding.value.scrollBackThreshold || 0;
-  el._detectionOffset = binding.value.offset || 0;
+  if (
+    binding.value.scrollElement &&
+    el._scrollElement !== binding.value.scrollElement
+  ) {
+    unbind(el);
+    bind(el, binding);
+  } else {
+    el._thresholdCallback = binding.value.callback || (() => {});
+    el._scrollThreshold = binding.value.threshold || 0;
+    el._scrollBackThreshold = binding.value.scrollBackThreshold || 0;
+    el._detectionOffset = binding.value.offset || 0;
+  }
 };
 
 export default {
