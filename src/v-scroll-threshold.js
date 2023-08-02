@@ -14,7 +14,10 @@ function isBindingValueValid(bindingValue) {
 
 function getRelativeScrollPositionToElement(el, elementOffset) {
   const currentScroll =
-    window.scrollY || window.pageYOffset || window.scrollTop || 0;
+    el._scrollElement.scrollY ||
+    el._scrollElement.pageYOffset ||
+    el._scrollElement.scrollTop ||
+    0;
   const elementScroll = (el.offsetTop || 0) + (elementOffset || 0);
   if (currentScroll === 0 && elementScroll === 0) {
     /**
