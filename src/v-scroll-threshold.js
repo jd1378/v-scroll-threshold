@@ -130,7 +130,8 @@ const bind = (el, binding) => {
 
 const unbind = (el) => {
   if (!el._scrollHandler) return;
-  el._scrollElement.removeEventListener('scroll', el._scrollHandler, evtOpts);
+  el._scrollElement &&
+    el._scrollElement.removeEventListener('scroll', el._scrollHandler, evtOpts);
   delete el._scrollHandler;
   delete el._thresholdCallback;
   delete el._scrollThreshold;
@@ -140,10 +141,7 @@ const unbind = (el) => {
 };
 
 const update = (el, binding) => {
-  if (
-    binding.value.scrollElement &&
-    el._scrollElement !== binding.value.scrollElement
-  ) {
+  if (el._scrollElement !== binding.value.scrollElement) {
     unbind(el);
     bind(el, binding);
   } else {
