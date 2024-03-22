@@ -124,7 +124,7 @@ const bind = (el, binding) => {
     }
   };
   el._scrollElement.addEventListener('scroll', scrollHandler, evtOpts);
-  el._thresholdCallback(startingRelativeScrollPos, false);
+  scrollHandler();
   el._scrollHandler = scrollHandler;
 };
 
