@@ -23,7 +23,8 @@
     "build:ssr": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format cjs",
     "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
-    "audit-fix": "npx cross-env npm_config_yes=true npx yarn-audit-fix"
+    "audit-fix": "npx cross-env npm_config_yes=true npx yarn-audit-fix",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
