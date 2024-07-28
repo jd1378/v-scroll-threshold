@@ -108,7 +108,8 @@ const bind = (el, binding) => {
       el._scrollBackThreshold &&
       newIsAlong &&
       !isMinusZ &&
-      el._scrollBackValue < el._scrollBackThreshold
+      el._scrollBackValue < el._scrollBackThreshold &&
+      newRelativeScrollPos !== 0
     ) {
       return;
     }
